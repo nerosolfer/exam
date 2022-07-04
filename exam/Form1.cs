@@ -52,12 +52,12 @@ namespace exam
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string id = "SELECT 'id' FROM 'var2'";
+            string id = "SELECT MAX id FROM var2";
             label1.Text = ($"Всего пациентов: {id}");
 
             _ConnectDB ConnDb = new _ConnectDB();
             MySqlConnection connDb = new MySqlConnection(ConnDb.Initialization());
-            string zapros = "SELECT 'id', 'fio','age', 's' FROM 'var2'";
+            string zapros = "SELECT 'id', 'fio','age', 's' FROM 'var2' ORDER BY `fio` ASC LIMIT 1000";
             try
             {
                 connDb.Open();
@@ -65,7 +65,7 @@ namespace exam
                 DataSet dataset = new DataSet();
                 adapter.Fill(dataset);
                 dataGridView1.DataSource = dataset.Tables[1];
-                dataGridView1.Sort(new RowComparer(SortOrder.Ascending));
+              
             }
             catch (Exception ex)
             {
@@ -92,34 +92,7 @@ namespace exam
             dataGridView1.Columns[3].HeaderText = "Пол";
 
         }
-        private class RowComparer : System.Collections.IComparer
-        {
-            private static int sortOrderModifier = 1;
-
-            public RowComparer(SortOrder sortOrder)
-            {
-                if (sortOrder == SortOrder.Descending)
-                {
-                    sortOrderModifier = -1;
-                }
-                else if (sortOrder == SortOrder.Ascending)
-                {
-                    sortOrderModifier = 1;
-                }
-            }
-
-            public int Compare(object x, object y)
-            {
-                DataGridViewRow DataGridViewRow1 = (DataGridViewRow)x;
-                DataGridViewRow DataGridViewRow2 = (DataGridViewRow)y;
-
-             
-                int CompareResult = System.String.Compare(
-                    DataGridViewRow1.Cells[1].Value.ToString(),
-                    DataGridViewRow2.Cells[1].Value.ToString());
-                return CompareResult * sortOrderModifier;
-            }
-        }
+  
         private void button1_Click(object sender, EventArgs e)
         {
           
