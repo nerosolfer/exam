@@ -30,7 +30,7 @@ namespace exam
 
             public string Initialization()
             {
-                Host = "192.168.25.23";
+                Host = "chuc.caseum.ru";
                 Port = "33333";
                 User = "exem_is";
                 Database = "exem_is";
@@ -52,20 +52,20 @@ namespace exam
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string id = "SELECT MAX id FROM var2";
-            label1.Text = ($"Всего пациентов: {id}");
+            
 
             _ConnectDB ConnDb = new _ConnectDB();
             MySqlConnection connDb = new MySqlConnection(ConnDb.Initialization());
-            string zapros = "SELECT 'id', 'fio','age', 's' FROM 'var2' ORDER BY `fio` ASC LIMIT 1000";
+            string zapros = "SELECT id, fio, age, s FROM var2 ORDER BY fio ASC";
+            
+            label1.Text = Convert.ToString(dataGridView1.Rows.Count);
             try
             {
                 connDb.Open();
                 MySqlDataAdapter adapter = new MySqlDataAdapter(zapros, connDb);
                 DataSet dataset = new DataSet();
                 adapter.Fill(dataset);
-                dataGridView1.DataSource = dataset.Tables[1];
-              
+                dataGridView1.DataSource = dataset.Tables[0];
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace exam
                 MessageBox.Show(message);
                 this.Close();
             }
-            
+
             dataGridView1.Columns[0].Visible = false;
             dataGridView1.Columns[1].Visible = true;
             dataGridView1.Columns[2].Visible = true;
@@ -95,7 +95,11 @@ namespace exam
   
         private void button1_Click(object sender, EventArgs e)
         {
+            _ConnectDB ConnDb = new _ConnectDB();
+            MySqlConnection connDb = new MySqlConnection(ConnDb.Initialization());
           
+            foreach(DataGridViewRow row in dataGridView1.Rows)
+            if (Convert.ToString(row.Cells[3].Value) == "м") { row.DefaultCellStyle.BackColor = Color.Red; }
         }
 
         private void label1_Click(object sender, EventArgs e)
